@@ -29,7 +29,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const apiUrl = process.env.NODE_ENV === 'production' ? 'https://finance-reddoor.zeabur.app:8080' : '';
+      const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
       const response = await axios.get(`${apiUrl}/api/customers?year=${yearFilter}`);
       setProjects(response.data);
     } catch (error) {
@@ -203,7 +203,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             customer={editingCustomer}
             onSave={async (customer) => {
               try {
-                const apiUrl = process.env.NODE_ENV === 'production' ? 'https://finance-reddoor.zeabur.app:8080' : '';
+                const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
                 await axios.put(`${apiUrl}/api/customers/${editingCustomer!.id}`, customer);
                 fetchProjects();
                 setShowEditModal(false);
@@ -224,7 +224,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
           onClose={() => setIsModalOpen(false)}
           onSave={async (customer) => {
             try {
-              const apiUrl = process.env.NODE_ENV === 'production' ? 'https://finance-reddoor.zeabur.app:8080' : '';
+              const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
               await axios.post(`${apiUrl}/api/customers`, customer);
               fetchProjects();
             } catch (error) {
