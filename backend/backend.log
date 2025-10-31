@@ -1,0 +1,99 @@
+
+> finance-tool-backend@1.0.0 dev
+> tsx watch src/index.ts
+
+🚀 伺服器運行在 http://localhost:3001
+Annual report error: error: column p.company_alias does not exist
+    at /Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 1)
+    at <anonymous> (/Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/src/routes/finance.ts:39:44) {
+  length: 113,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '24',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '3657',
+  routine: 'errorMissingColumn'
+}
+Annual report error: error: column p.company_alias does not exist
+    at /Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 1)
+    at <anonymous> (/Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/src/routes/finance.ts:39:44) {
+  length: 113,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '24',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '3657',
+  routine: 'errorMissingColumn'
+}
+Annual report error: error: column p.company_alias does not exist
+    at /Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+    at <anonymous> (/Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/src/routes/finance.ts:39:44) {
+  length: 113,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '24',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '3657',
+  routine: 'errorMissingColumn'
+}
+Annual report error: error: column p.company_alias does not exist
+    at /Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 0)
+    at <anonymous> (/Users/winson/Dropbox/vibe_tools/reddoor-winson-assistant/finance-tool/backend/src/routes/finance.ts:39:44) {
+  length: 113,
+  severity: 'ERROR',
+  code: '42703',
+  detail: undefined,
+  hint: undefined,
+  position: '24',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '3657',
+  routine: 'errorMissingColumn'
+}
+3:01:13 PM [tsx] change in ./src/routes/finance.ts Restarting...
+3:01:18 PM [tsx] Process didn't exit in 5s. Force killing...

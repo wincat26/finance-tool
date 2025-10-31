@@ -1,0 +1,22 @@
+{
+  "name": "finance-tool",
+  "version": "1.0.0",
+  "description": "財務互動工具 MVP - 專案型業務收支管理系統",
+  "scripts": {
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "build": "npm run backend:build && npm run frontend:build",
+    "backend:build": "cd backend && npm run build",
+    "frontend:build": "cd frontend && npm run build",
+    "db:migrate": "cd backend && npm run db:migrate",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wincat26/finance-tool.git"
+  }
+}
