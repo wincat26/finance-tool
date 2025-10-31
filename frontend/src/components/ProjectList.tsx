@@ -30,7 +30,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
     try {
       setLoading(true);
       const response = await axios.get(`/api/customers?year=${yearFilter}`);
-      setProjects(response.data);
+      setProjects(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
     } finally {
@@ -38,7 +38,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
     }
   };
 
-  const filteredProjects = projects.filter(project => {
+  const filteredProjects = (projects || []).filter(project => {
     const matchesSearch = project.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.contact_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
