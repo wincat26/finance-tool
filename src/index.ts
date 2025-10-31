@@ -16,7 +16,12 @@ const PORT = process.env.PORT || 3001;
 // 中間件
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://finance-tool.vercel.app', 'https://*.vercel.app'],
+  origin: [
+    'http://localhost:3000', 
+    'https://finance-tool.vercel.app', 
+    'https://finance-tool-sage.vercel.app',
+    /\.vercel\.app$/
+  ],
   credentials: true
 }));
 app.use(express.json());
