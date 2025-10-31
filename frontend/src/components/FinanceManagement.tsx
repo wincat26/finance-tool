@@ -14,7 +14,8 @@ export default function FinanceManagement() {
   const fetchReportData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/finance/annual-report?year=${yearFilter}`);
+      const apiUrl = import.meta.env.PROD ? 'https://finance-reddoor.zeabur.app:8080' : '';
+      const response = await fetch(`${apiUrl}/api/finance/annual-report?year=${yearFilter}`);
       const data = await response.json();
       setReportData(data);
     } catch (error) {
