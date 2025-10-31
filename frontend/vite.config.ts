@@ -14,8 +14,5 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist'
-  },
-  define: {
-    __API_URL__: JSON.stringify('https://finance-reddoor.zeabur.app:8080')
   }
 })

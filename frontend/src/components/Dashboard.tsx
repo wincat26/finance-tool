@@ -18,8 +18,7 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
-      const response = await axios.get(`${apiUrl}/api/dashboard?year=${selectedYear}`);
+      const response = await axios.get(`/api/dashboard?year=${selectedYear}`);
       setData(response.data);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);

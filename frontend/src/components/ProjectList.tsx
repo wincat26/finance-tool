@@ -16,7 +16,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [yearFilter, setYearFilter] = useState<number>(new Date().getFullYear());
+  const [yearFilter, setYearFilter] = useState<number>(2024);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Project | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<Project | null>(null);
@@ -29,8 +29,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
-      const response = await axios.get(`${apiUrl}/api/customers?year=${yearFilter}`);
+      const response = await axios.get(`/api/customers?year=${yearFilter}`);
       setProjects(response.data);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
@@ -203,8 +202,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             customer={editingCustomer}
             onSave={async (customer) => {
               try {
-                const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
-                await axios.put(`${apiUrl}/api/customers/${editingCustomer!.id}`, customer);
+                await axios.put(`/api/customers/${editingCustomer!.id}`, customer);
                 fetchProjects();
                 setShowEditModal(false);
                 setEditingCustomer(null);
@@ -224,8 +222,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
           onClose={() => setIsModalOpen(false)}
           onSave={async (customer) => {
             try {
-              const apiUrl = 'https://finance-reddoor.zeabur.app:8080';
-              await axios.post(`${apiUrl}/api/customers`, customer);
+              await axios.post(`/api/customers`, customer);
               fetchProjects();
             } catch (error) {
               console.error('儲存客戶失敗:', error);
