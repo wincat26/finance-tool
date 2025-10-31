@@ -71,7 +71,7 @@ export default function Dashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">總收入</p>
               <p className="text-2xl font-bold text-gray-900">
-                ${data.profitLoss.totalRevenue.toLocaleString()}
+                ${(data.profitLoss?.totalRevenue || 0).toLocaleString()}
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function Dashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">總支出</p>
               <p className="text-2xl font-bold text-gray-900">
-                ${data.profitLoss.totalExpense.toLocaleString()}
+                ${(data.profitLoss?.totalExpense || 0).toLocaleString()}
               </p>
             </div>
           </div>
@@ -94,8 +94,8 @@ export default function Dashboard() {
             <DollarSign className="h-8 w-8 text-blue-500" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">淨利潤</p>
-              <p className={`text-2xl font-bold ${data.profitLoss.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                ${data.profitLoss.profit.toLocaleString()}
+              <p className={`text-2xl font-bold ${(data.profitLoss?.profit || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                ${(data.profitLoss?.profit || 0).toLocaleString()}
               </p>
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function Dashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">進案總數</p>
               <p className="text-2xl font-bold text-gray-900">
-                {data.projectStats.reduce((sum, stat) => sum + stat.count, 0)}
+                {(data.projectStats || []).reduce((sum, stat) => sum + stat.count, 0)}
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900 mb-4">月度現金流走勢</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data.cashFlow}>
+            <BarChart data={data.cashFlow || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -137,7 +137,7 @@ export default function Dashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={data.expenseStructure}
+                data={data.expenseStructure || []}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
@@ -146,7 +146,7 @@ export default function Dashboard() {
                 fill="#8884d8"
                 dataKey="amount"
               >
-                {data.expenseStructure.map((entry, index) => (
+                {(data.expenseStructure || []).map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -175,7 +175,7 @@ export default function Dashboard() {
               ></div>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              ${data.installmentProgress.receivedAmount.toLocaleString()}
+              ${(data.installmentProgress?.receivedAmount || 0).toLocaleString()}
             </p>
           </div>
           <div>
@@ -193,7 +193,7 @@ export default function Dashboard() {
               ></div>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              ${data.installmentProgress.pendingAmount.toLocaleString()}
+              ${(data.installmentProgress?.pendingAmount || 0).toLocaleString()}
             </p>
           </div>
         </div>
