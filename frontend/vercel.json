@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://finance-reddoor.zeabur.app:8080/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
