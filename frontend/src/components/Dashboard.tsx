@@ -163,14 +163,14 @@ export default function Dashboard() {
           <div>
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span>已收款</span>
-              <span>{data.installmentProgress.receivedCount} 筆</span>
+              <span>{data.installmentProgress?.receivedCount || 0} 筆</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-green-500 h-2 rounded-full"
                 style={{
-                  width: `${(data.installmentProgress.receivedCount / 
-                    (data.installmentProgress.receivedCount + data.installmentProgress.pendingCount)) * 100}%`
+                  width: `${((data.installmentProgress?.receivedCount || 0) / 
+                    ((data.installmentProgress?.receivedCount || 0) + (data.installmentProgress?.pendingCount || 0)) || 1) * 100}%`
                 }}
               ></div>
             </div>
@@ -181,14 +181,14 @@ export default function Dashboard() {
           <div>
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span>待收款</span>
-              <span>{data.installmentProgress.pendingCount} 筆</span>
+              <span>{data.installmentProgress?.pendingCount || 0} 筆</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-yellow-500 h-2 rounded-full"
                 style={{
-                  width: `${(data.installmentProgress.pendingCount / 
-                    (data.installmentProgress.receivedCount + data.installmentProgress.pendingCount)) * 100}%`
+                  width: `${((data.installmentProgress?.pendingCount || 0) / 
+                    ((data.installmentProgress?.receivedCount || 0) + (data.installmentProgress?.pendingCount || 0)) || 1) * 100}%`
                 }}
               ></div>
             </div>
