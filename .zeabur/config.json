@@ -1,0 +1,10 @@
+{
+  "build": {
+    "commands": [
+      "cd backend && npm install",
+      "cd backend && npm run build"
+    ]
+  },
+  "start": "cd backend && npm start",
+  "port": 3001
+}
