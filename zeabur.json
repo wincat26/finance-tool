@@ -1,0 +1,20 @@
+{
+  "name": "finance-tool",
+  "services": [
+    {
+      "name": "backend",
+      "buildCommand": "cd backend && npm install && npm run build",
+      "startCommand": "cd backend && npm start",
+      "port": 3001,
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    {
+      "name": "frontend",
+      "buildCommand": "cd frontend && npm install && npm run build",
+      "outputDir": "frontend/dist",
+      "port": 3000
+    }
+  ]
+}
