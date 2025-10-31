@@ -99,16 +99,21 @@ export default function CustomerModal({ isOpen, onClose, onSave, customer }: Cus
     validateField(name, value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (Object.keys(errors).length === 0) {
-      // 確保 contact_name 欄位存在
-      const submitData = {
-        ...formData,
-        contact_name: formData.contact_name || formData.finance_contact_name
-      };
-      onSave(submitData);
-      onClose();
+      try {
+        // 確保 contact_name 欄位存在
+        const submitData = {
+          ...formData,
+          contact_name: formData.contact_name || formData.finance_contact_name
+        };
+        await onSave(submitData);
+        onClose();
+      } catch (error) {
+        console.error('Save error:', error);
+        alert('儲存失敗，請檢查網路連線或稍後再試');
+      }
     }
   };
 
