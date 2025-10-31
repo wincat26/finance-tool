@@ -102,7 +102,12 @@ export default function CustomerModal({ isOpen, onClose, onSave, customer }: Cus
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (Object.keys(errors).length === 0) {
-      onSave(formData);
+      // 確保 contact_name 欄位存在
+      const submitData = {
+        ...formData,
+        contact_name: formData.contact_name || formData.finance_contact_name
+      };
+      onSave(submitData);
       onClose();
     }
   };
