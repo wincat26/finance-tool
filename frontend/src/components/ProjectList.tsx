@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, ExternalLink } from 'lucide-react';
 import { Project } from '../types';
-import axios from 'axios';
+import { apiClient } from '../utils/api';
 import { format } from 'date-fns';
 import CustomerModal from './CustomerModal';
 import CustomerDetail from './CustomerDetail';
@@ -29,7 +29,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/customers?year=${yearFilter}`);
+      const response = await apiClient.get(`/api/customers?year=${yearFilter}`);
       setProjects(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
@@ -202,7 +202,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             customer={editingCustomer}
             onSave={async (customer) => {
               try {
-                await axios.put(`/api/customers/${editingCustomer!.id}`, customer);
+                await apiClient.put(`/api/customers/${editingCustomer!.id}`, customer);
                 fetchProjects();
                 setShowEditModal(false);
                 setEditingCustomer(null);
@@ -222,7 +222,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
           onClose={() => setIsModalOpen(false)}
           onSave={async (customer) => {
             try {
-              await axios.post(`/api/customers`, customer);
+              await apiClient.post(`/api/customers`, customer);
               fetchProjects();
             } catch (error) {
               console.error('儲存客戶失敗:', error);

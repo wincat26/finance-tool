@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Calendar, DollarSign, TrendingUp, FileText, AlertCircle } from 'lucide-react';
 import { DashboardData } from '../types';
-import axios from 'axios';
+import { apiClient } from '../utils/api';
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
 
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/dashboard?year=${selectedYear}`);
+      const response = await apiClient.get(`/api/dashboard?year=${selectedYear}`);
       setData(response.data);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
