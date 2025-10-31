@@ -136,7 +136,7 @@ router.get('/', async (req, res) => {
     res.json(dashboard);
   } catch (error) {
     console.error('Dashboard error:', error);
-    res.status(500).json({ error: '取得 Dashboard 資料失敗', details: error.message });
+    res.status(500).json({ error: '取得 Dashboard 資料失敗', details: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
