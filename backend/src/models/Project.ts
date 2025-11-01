@@ -24,14 +24,16 @@ export class ProjectModel {
 
   static async create(project: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project> {
     const query = `
-      INSERT INTO projects (company_name, vat_number, contact_name, contact_phone, 
-                           contact_email, project_date, responsible_person, status, description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO projects (company_name, company_alias, vat_number, contact_name, contact_phone, 
+                           contact_email, project_date, responsible_person, status, description,
+                           finance_contact_name, finance_contact_phone, finance_contact_email, finance_notes)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING *
     `;
     
     const values = [
       project.company_name,
+      project.company_alias,
       project.vat_number,
       project.contact_name,
       project.contact_phone,
@@ -39,7 +41,11 @@ export class ProjectModel {
       project.project_date,
       project.responsible_person,
       project.status,
-      project.description
+      project.description,
+      project.finance_contact_name,
+      project.finance_contact_phone,
+      project.finance_contact_email,
+      project.finance_notes
     ];
     
     const result = await pool.query(query, values);
@@ -66,7 +72,7 @@ export class ProjectModel {
 
   static async delete(id: number): Promise<boolean> {
     const result = await pool.query('DELETE FROM projects WHERE id = $1', [id]);
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getFiles(projectId: number): Promise<ProjectFile[]> {

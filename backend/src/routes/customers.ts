@@ -11,11 +11,15 @@ const customerSchema = z.object({
   vat_number: z.string().optional(),
   contact_name: z.string().min(1),
   contact_phone: z.string().optional(),
-  contact_email: z.string().email().optional(),
+  contact_email: z.string().email().optional().or(z.literal('')),
   project_date: z.string().transform(str => new Date(str)),
   responsible_person: z.string().min(1),
   status: z.enum(['active', 'completed', 'cancelled']).default('active'),
-  description: z.string().optional()
+  description: z.string().optional(),
+  finance_contact_name: z.string().optional(),
+  finance_contact_phone: z.string().optional(),
+  finance_contact_email: z.string().email().optional().or(z.literal('')),
+  finance_notes: z.string().optional()
 });
 
 // 取得所有客戶

@@ -1,6 +1,7 @@
 export interface Project {
   id: number;
   company_name: string;
+  company_alias?: string;
   vat_number?: string;
   contact_name: string;
   contact_phone?: string;
@@ -9,6 +10,10 @@ export interface Project {
   responsible_person: string;
   status: 'active' | 'completed' | 'cancelled';
   description?: string;
+  finance_contact_name?: string;
+  finance_contact_phone?: string;
+  finance_contact_email?: string;
+  finance_notes?: string;
   created_at: Date;
   updated_at: Date;
 }
