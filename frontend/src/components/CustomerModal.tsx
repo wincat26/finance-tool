@@ -103,12 +103,19 @@ export default function CustomerModal({ isOpen, onClose, onSave, customer }: Cus
     e.preventDefault();
     if (Object.keys(errors).length === 0) {
       try {
-        // 確保 contact_name 欄位存在
         const submitData = {
           ...formData,
           contact_name: formData.contact_name || formData.finance_contact_name
         };
-        await onSave(submitData);
+
+        const sanitized = Object.fromEntries(
+          Object.entries(submitData).map(([key, value]) => [
+            key,
+            value === '' ? undefined : value,
+          ])
+        ) as typeof submitData;
+
+        await onSave(sanitized);
         onClose();
       } catch (error) {
         console.error('Save error:', error);
