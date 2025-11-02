@@ -23,7 +23,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchRevenues = async () => {
     try {
-      const response = await apiClient.get(`/api/customers/${customer.id}/revenues`);
+      const response = await apiClient.get(`/customers/${customer.id}/revenues`);
       setRevenues(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch revenues:', error);
@@ -43,7 +43,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchExpenses = async () => {
     try {
-      const response = await apiClient.get(`/api/customers/${customer.id}/expenses`);
+      const response = await apiClient.get(`/customers/${customer.id}/expenses`);
       setExpenses(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch expenses:', error);
@@ -66,7 +66,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchFiles = async () => {
     try {
-      const response = await apiClient.get(`/api/customers/${customer.id}/files`);
+      const response = await apiClient.get(`/customers/${customer.id}/files`);
       setFiles(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch files:', error);
@@ -614,14 +614,14 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         onSave={async (file) => {
           try {
             const url = editingFile 
-              ? `/api/customers/${customer.id}/files/${editingFile.id}`
-              : `/api/customers/${customer.id}/files`;
+              ? `/customers/${customer.id}/files/${editingFile.id}`
+              : `/customers/${customer.id}/files`;
             const method = editingFile ? 'PUT' : 'POST';
             
             if (editingFile) {
-              await apiClient.put(`/api/customers/${customer.id}/files/${editingFile.id}`, file);
+              await apiClient.put(`/customers/${customer.id}/files/${editingFile.id}`, file);
             } else {
-              await apiClient.post(`/api/customers/${customer.id}/files`, file);
+              await apiClient.post(`/customers/${customer.id}/files`, file);
             }
             await fetchFiles();
             setEditingFile(null);
@@ -631,7 +631,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/api/customers/${customer.id}/files/${id}`);
+            await apiClient.delete(`/customers/${customer.id}/files/${id}`);
             await fetchFiles();
             setEditingFile(null);
           } catch (error) {
@@ -650,14 +650,14 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         onSave={async (revenue) => {
           try {
             const url = editingRevenue 
-              ? `/api/customers/${customer.id}/revenues/${editingRevenue.id}`
-              : `/api/customers/${customer.id}/revenues`;
+              ? `/customers/${customer.id}/revenues/${editingRevenue.id}`
+              : `/customers/${customer.id}/revenues`;
             const method = editingRevenue ? 'PUT' : 'POST';
             
             if (editingRevenue) {
-              await apiClient.put(`/api/customers/${customer.id}/revenues/${editingRevenue.id}`, revenue);
+              await apiClient.put(`/customers/${customer.id}/revenues/${editingRevenue.id}`, revenue);
             } else {
-              await apiClient.post(`/api/customers/${customer.id}/revenues`, revenue);
+              await apiClient.post(`/customers/${customer.id}/revenues`, revenue);
             }
             await fetchRevenues();
             setEditingRevenue(null);
@@ -667,7 +667,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/api/customers/${customer.id}/revenues/${id}`);
+            await apiClient.delete(`/customers/${customer.id}/revenues/${id}`);
             await fetchRevenues();
             setEditingRevenue(null);
           } catch (error) {
@@ -686,14 +686,14 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         onSave={async (expense) => {
           try {
             const url = editingExpense 
-              ? `/api/customers/${customer.id}/expenses/${editingExpense.id}`
-              : `/api/customers/${customer.id}/expenses`;
+              ? `/customers/${customer.id}/expenses/${editingExpense.id}`
+              : `/customers/${customer.id}/expenses`;
             const method = editingExpense ? 'PUT' : 'POST';
             
             if (editingExpense) {
-              await apiClient.put(`/api/customers/${customer.id}/expenses/${editingExpense.id}`, expense);
+              await apiClient.put(`/customers/${customer.id}/expenses/${editingExpense.id}`, expense);
             } else {
-              await apiClient.post(`/api/customers/${customer.id}/expenses`, expense);
+              await apiClient.post(`/customers/${customer.id}/expenses`, expense);
             }
             await fetchExpenses();
             setEditingExpense(null);
@@ -703,7 +703,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/api/customers/${customer.id}/expenses/${id}`);
+            await apiClient.delete(`/customers/${customer.id}/expenses/${id}`);
             await fetchExpenses();
             setEditingExpense(null);
           } catch (error) {
