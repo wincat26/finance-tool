@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
-  "outputDirectory": "frontend/dist",
-  "build": {
-    "env": {
-      "VITE_API_BASE_URL": "https://finance-reddoor.zeabur.app"
-    }
-  }
-}
