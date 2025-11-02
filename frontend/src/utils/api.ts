@@ -5,7 +5,7 @@ const resolveUrl = (path: string) =>
   path.startsWith('http') ? path : `${API_BASE}${path}`;
 
 export const apiClient = axios.create({
-  baseURL: API_BASE || undefined,
+  baseURL: `${API_BASE}/api`,
   withCredentials: true,
 });
 
