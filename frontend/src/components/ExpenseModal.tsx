@@ -90,7 +90,8 @@ export default function ExpenseModal({ isOpen, onClose, onSave, expense, onDelet
     e.preventDefault();
     onSave({
       ...formData,
-      amount: parseFloat(formData.amount)
+      amount: parseFloat(formData.amount),
+      expense_date: formData.expense_date + '-01'
     });
     setFormData({
       supplier_name: '',

@@ -30,34 +30,29 @@
 
 ```
 finance-tool/
-├── frontend/                 # React 前端
-│   ├── src/
-│   │   ├── components/      # React 元件
-│   │   ├── pages/           # 頁面元件
-│   │   ├── utils/           # 工具函數
-│   │   └── types/           # TypeScript 類型
+├── package.json             # npm workspaces 管理腳本
+├── backend/                 # Node.js 後端
 │   ├── package.json
-│   └── vite.config.ts
-│
-├── backend/                  # Node.js 後端
-│   ├── src/
-│   │   ├── routes/          # API 路由
-│   │   ├── models/          # 資料模型
-│   │   ├── database/        # 資料庫相關
-│   │   │   ├── connection.ts
-│   │   │   ├── schema.sql
-│   │   │   └── migrations/
-│   │   ├── types/           # TypeScript 類型
-│   │   └── index.ts         # 入口文件
+│   ├── tsconfig.json
+│   └── src/
+│       ├── routes/          # API 路由
+│       ├── models/          # 資料模型
+│       ├── database/        # schema 與 migrations
+│       ├── utils/           # 工具腳本 (smoke check 等)
+│       └── index.ts         # 入口文件
+├── frontend/                # React 前端
 │   ├── package.json
-│   └── tsconfig.json
-│
-├── docs/                     # 文件
-├── log/                      # 日誌文件
-├── README.md                 # 專案說明
-├── DEPLOYMENT_GUIDE.md       # 部署指南
-├── SYSTEM_DIAGNOSIS.md       # 系統診斷
-└── DEVELOPER_ONBOARDING.md   # 本文件
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── utils/
+│       └── types/
+├── docs/                    # 技術文件
+├── log/                     # 日誌
+├── README.md
+├── DEPLOYMENT_GUIDE.md
+├── SYSTEM_DIAGNOSIS.md
+└── DEVELOPER_ONBOARDING.md
 ```
 
 ## 🚀 本地開發環境設置
@@ -87,13 +82,9 @@ cd finance-tool
 ### 2. 安裝依賴
 
 ```bash
-# 安裝後端依賴
-cd backend
-npm install
-
-# 安裝前端依賴
-cd ../frontend
-npm install
+# 透過 npm workspace 安裝
+npm install --workspace backend
+npm install --workspace frontend
 ```
 
 ### 3. 設置資料庫
@@ -110,8 +101,8 @@ CREATE DATABASE finance_tool;
 # 執行 schema
 psql -U postgres -d finance_tool -f backend/src/database/schema.sql
 
-# 執行最新 migration（財務欄位）
-psql -U postgres -d finance_tool -f backend/src/database/migrations/add_missing_columns.sql
+# 執行所有 migrations（會依序執行資料夾內的 .sql）
+npm run backend:migrate
 ```
 
 ### 4. 配置環境變數
@@ -135,18 +126,28 @@ NODE_ENV=development
 VITE_API_BASE_URL=http://localhost:3001/api
 ```
 
+#### 雲端環境變數對照
+
+| 服務 | 變數 | 說明 | 範例 |
+| ---- | ---- | ---- | ---- |
+| Zeabur (後端) | `POSTGRES_HOST` | PostgreSQL 主機 | `postgresql.internal` |
+|  | `POSTGRES_PORT` | PostgreSQL 連線埠 | `5432` |
+|  | `POSTGRES_DATABASE` | 資料庫名稱 | `finance_tool` |
+|  | `POSTGRES_USERNAME` | DB 使用者 | `postgres` |
+|  | `POSTGRES_PASSWORD` | DB 密碼 | `*******` |
+|  | `PORT` | 服務埠號 | `3001` |
+| Vercel (前端) | `VITE_API_BASE_URL` | 後端 API 位址 | `https://finance-reddoor.zeabur.app/api` |
+
+> ✅ 建議在 Zeabur/Vercel 後台分別新增上述變數，與本地 `.env` 命名保持一致，以利部署。
+
 ### 5. 啟動開發伺服器
 
 ```bash
-# Terminal 1 - 啟動後端
-cd backend
-npm run dev
-# 後端運行在 http://localhost:3001
+# Terminal 1 - 後端 (工作目錄在專案根目錄即可)
+npm run backend:dev   # http://localhost:3001
 
-# Terminal 2 - 啟動前端
-cd frontend
-npm run dev
-# 前端運行在 http://localhost:3000
+# Terminal 2 - 前端
+npm run frontend:dev  # http://localhost:3000
 ```
 
 ### 6. 驗證安裝
@@ -157,6 +158,14 @@ curl http://localhost:3001/api/projects
 
 # 或在瀏覽器訪問
 open http://localhost:3000
+```
+
+### 7. 執行 smoke check（選用）
+
+確保資料庫欄位完整、可供部署前確認：
+
+```bash
+npm run backend:smoke
 ```
 
 ## 📊 資料庫結構
@@ -199,7 +208,7 @@ open http://localhost:3000
 #### project_files (檔案)
 ```sql
 - id, project_id, file_type, file_name
-- google_drive_url
+- google_drive_url, created_by
 ```
 
 ## 🔧 開發指令

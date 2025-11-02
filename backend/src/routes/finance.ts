@@ -3,15 +3,47 @@ import pool from '../database/connection';
 
 const router = Router();
 
+let hasCompanyAliasColumn: boolean | null = null;
+
+async function ensureCompanyAliasColumn(): Promise<boolean> {
+  if (hasCompanyAliasColumn !== null) {
+    return hasCompanyAliasColumn;
+  }
+
+  try {
+    const result = await pool.query(
+      `
+        SELECT EXISTS (
+          SELECT 1
+          FROM information_schema.columns
+          WHERE table_name = 'projects'
+            AND column_name = 'company_alias'
+        ) AS has_column
+      `
+    );
+    hasCompanyAliasColumn = Boolean(result.rows[0]?.has_column);
+  } catch (error) {
+    console.error('Failed to inspect projects table metadata:', error);
+    hasCompanyAliasColumn = false;
+  }
+
+  return hasCompanyAliasColumn;
+}
+
 // 年度收益表
 router.get('/annual-report', async (req, res) => {
   try {
     const year = req.query.year ? parseInt(req.query.year as string) : new Date().getFullYear();
     
     // 取得收入資料，包含公司名稱和服務類型
+    const hasAlias = await ensureCompanyAliasColumn();
+    const companySelect = hasAlias
+      ? 'COALESCE(NULLIF(p.company_alias, \'\'), p.company_name)'
+      : 'p.company_name';
+
     const revenueQuery = `
       SELECT 
-        p.company_name,
+        ${companySelect} AS company_name,
         r.service_type,
         EXTRACT(MONTH FROM r.income_date) as month,
         SUM(r.amount) as total_amount
@@ -25,7 +57,7 @@ router.get('/annual-report', async (req, res) => {
     // 取得支出資料，包含公司名稱和支出類型
     const expenseQuery = `
       SELECT 
-        p.company_name,
+        ${companySelect} AS company_name,
         e.expense_type,
         EXTRACT(MONTH FROM e.expense_date) as month,
         SUM(e.amount) as total_amount

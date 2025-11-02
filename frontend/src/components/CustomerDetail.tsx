@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import FileModal from './FileModal';
 import RevenueModal from './RevenueModal';
 import ExpenseModal from './ExpenseModal';
+import { apiClient } from '../utils/api';
 
 interface CustomerDetailProps {
   customer: Project;
@@ -22,9 +23,8 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchRevenues = async () => {
     try {
-      const response = await fetch(`/api/customers/${customer.id}/revenues`);
-      const data = await response.json();
-      setRevenues(Array.isArray(data) ? data : []);
+      const response = await apiClient.get(`/api/customers/${customer.id}/revenues`);
+      setRevenues(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch revenues:', error);
       setRevenues([]);
@@ -43,9 +43,8 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchExpenses = async () => {
     try {
-      const response = await fetch(`/api/customers/${customer.id}/expenses`);
-      const data = await response.json();
-      setExpenses(Array.isArray(data) ? data : []);
+      const response = await apiClient.get(`/api/customers/${customer.id}/expenses`);
+      setExpenses(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch expenses:', error);
       setExpenses([]);
@@ -67,11 +66,11 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchFiles = async () => {
     try {
-      const response = await fetch(`/api/customers/${customer.id}/files`);
-      const data = await response.json();
-      setFiles(data);
+      const response = await apiClient.get(`/api/customers/${customer.id}/files`);
+      setFiles(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch files:', error);
+      setFiles([]);
     }
   };
 
@@ -619,28 +618,22 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               : `/api/customers/${customer.id}/files`;
             const method = editingFile ? 'PUT' : 'POST';
             
-            const response = await fetch(url, {
-              method,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(file)
-            });
-            if (response.ok) {
-              fetchFiles();
-              setEditingFile(null);
+            if (editingFile) {
+              await apiClient.put(`/api/customers/${customer.id}/files/${editingFile.id}`, file);
+            } else {
+              await apiClient.post(`/api/customers/${customer.id}/files`, file);
             }
+            await fetchFiles();
+            setEditingFile(null);
           } catch (error) {
             console.error('檔案操作失敗:', error);
           }
         }}
         onDelete={async (id) => {
           try {
-            const response = await fetch(`/api/customers/${customer.id}/files/${id}`, {
-              method: 'DELETE'
-            });
-            if (response.ok) {
-              fetchFiles();
-              setEditingFile(null);
-            }
+            await apiClient.delete(`/api/customers/${customer.id}/files/${id}`);
+            await fetchFiles();
+            setEditingFile(null);
           } catch (error) {
             console.error('刪除檔案失敗:', error);
           }
@@ -661,28 +654,22 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               : `/api/customers/${customer.id}/revenues`;
             const method = editingRevenue ? 'PUT' : 'POST';
             
-            const response = await fetch(url, {
-              method,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(revenue)
-            });
-            if (response.ok) {
-              fetchRevenues();
-              setEditingRevenue(null);
+            if (editingRevenue) {
+              await apiClient.put(`/api/customers/${customer.id}/revenues/${editingRevenue.id}`, revenue);
+            } else {
+              await apiClient.post(`/api/customers/${customer.id}/revenues`, revenue);
             }
+            await fetchRevenues();
+            setEditingRevenue(null);
           } catch (error) {
             console.error('收入操作失敗:', error);
           }
         }}
         onDelete={async (id) => {
           try {
-            const response = await fetch(`/api/customers/${customer.id}/revenues/${id}`, {
-              method: 'DELETE'
-            });
-            if (response.ok) {
-              fetchRevenues();
-              setEditingRevenue(null);
-            }
+            await apiClient.delete(`/api/customers/${customer.id}/revenues/${id}`);
+            await fetchRevenues();
+            setEditingRevenue(null);
           } catch (error) {
             console.error('刪除收入失敗:', error);
           }
@@ -703,28 +690,22 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               : `/api/customers/${customer.id}/expenses`;
             const method = editingExpense ? 'PUT' : 'POST';
             
-            const response = await fetch(url, {
-              method,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(expense)
-            });
-            if (response.ok) {
-              fetchExpenses();
-              setEditingExpense(null);
+            if (editingExpense) {
+              await apiClient.put(`/api/customers/${customer.id}/expenses/${editingExpense.id}`, expense);
+            } else {
+              await apiClient.post(`/api/customers/${customer.id}/expenses`, expense);
             }
+            await fetchExpenses();
+            setEditingExpense(null);
           } catch (error) {
             console.error('支出操作失敗:', error);
           }
         }}
         onDelete={async (id) => {
           try {
-            const response = await fetch(`/api/customers/${customer.id}/expenses/${id}`, {
-              method: 'DELETE'
-            });
-            if (response.ok) {
-              fetchExpenses();
-              setEditingExpense(null);
-            }
+            await apiClient.delete(`/api/customers/${customer.id}/expenses/${id}`);
+            await fetchExpenses();
+            setEditingExpense(null);
           } catch (error) {
             console.error('刪除支出失敗:', error);
           }

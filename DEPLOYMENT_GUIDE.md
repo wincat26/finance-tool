@@ -13,30 +13,47 @@
 
 ### 1. 資料庫遷移
 
-#### 方法 A: 使用自動化腳本（推薦）
+後端 `npm start` 會自動執行 migrations，但建議部署前手動跑一次確認。
+
+#### 方法 A：透過 npm workspace（推薦）
 
 ```bash
-./migrate-production.sh
+# 於專案根目錄
+npm run backend:migrate
 ```
 
-腳本會提示你輸入 Zeabur PostgreSQL 連線資訊。
-
-#### 方法 B: 手動執行
+#### 方法 B：手動 SQL
 
 ```bash
 # 連接到 Zeabur PostgreSQL
 psql -h <ZEABUR_HOST> -p 5432 -U <USERNAME> -d <DATABASE>
 
-# 執行遷移
+# 依序執行全部 migration 檔案
 \i backend/src/database/migrations/add_missing_columns.sql
+\i backend/src/database/migrations/add_project_files_created_by.sql
 
 # 驗證
 \d projects
+\d project_files
 ```
+
+### 1.1 環境變數設定
+
+| 服務 | 變數 | 說明 | 範例 |
+| ---- | ---- | ---- | ---- |
+| Zeabur Backend | `POSTGRES_HOST` | PostgreSQL 主機名稱 | `postgresql.internal` |
+|  | `POSTGRES_PORT` | PostgreSQL 連線 port | `5432` |
+|  | `POSTGRES_DATABASE` | 資料庫名稱 | `finance_tool` |
+|  | `POSTGRES_USERNAME` | DB 使用者 | `postgres` |
+|  | `POSTGRES_PASSWORD` | DB 密碼 | `********` |
+|  | `PORT` | 服務埠號 | `3001` |
+| Vercel Frontend | `VITE_API_BASE_URL` | 後端 API 入口 | `https://finance-reddoor.zeabur.app/api` |
+
+> 建議於 Zeabur 與 Vercel 後台記錄上述變數，與 `.env` 命名保持一致，方便換環境部署。
 
 ### 2. 後端部署
 
-Zeabur 會自動偵測 GitHub 推送並重新部署。
+Zeabur 會自動偵測 GitHub 推送並重新部署。後端 `npm start` 會在啟動前自動執行 `npm run migrate`，確保資料表欄位到位。
 
 **手動觸發：**
 1. 登入 Zeabur Dashboard
@@ -47,6 +64,8 @@ Zeabur 會自動偵測 GitHub 推送並重新部署。
 **驗證部署：**
 ```bash
 curl https://finance-reddoor.zeabur.app/api/projects
+# Smoke check（於本地或 Zeabur console）
+npm run backend:smoke
 ```
 
 ### 3. 前端部署

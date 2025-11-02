@@ -16,11 +16,18 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [yearFilter, setYearFilter] = useState<number>(2024);
+  const currentYear = new Date().getFullYear();
+  const envDefaultYear = Number(import.meta.env.VITE_DEFAULT_YEAR);
+  const defaultYear = Number.isFinite(envDefaultYear) ? Math.trunc(envDefaultYear) : currentYear;
+  const [yearFilter, setYearFilter] = useState<number>(defaultYear);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Project | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<Project | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const yearOptions = React.useMemo(
+    () => Array.from({ length: 5 }, (_, i) => Math.max(currentYear, defaultYear) - i),
+    [currentYear, defaultYear]
+  );
 
   useEffect(() => {
     fetchProjects();
@@ -112,11 +119,13 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
 
           <select
             value={yearFilter}
-            onChange={(e) => setYearFilter(parseInt(e.target.value))}
+            onChange={(e) => setYearFilter(parseInt(e.target.value, 10))}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
-            {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
-              <option key={year} value={year}>{year} 年</option>
+            {yearOptions.map((year) => (
+              <option key={year} value={year}>
+                {year} 年
+              </option>
             ))}
           </select>
 

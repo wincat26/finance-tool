@@ -30,6 +30,7 @@ CREATE TABLE project_files (
     file_type VARCHAR(100) NOT NULL,
     file_name VARCHAR(255) NOT NULL,
     google_drive_url TEXT NOT NULL,
+    created_by VARCHAR(255) NOT NULL DEFAULT '系統管理員',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,6 +90,11 @@ CREATE TABLE expenses (
     invoice_number VARCHAR(100),
     file_url TEXT,
     notes TEXT,
+    payment_request BOOLEAN DEFAULT FALSE,
+    ad_platform VARCHAR(50),
+    card_fee DECIMAL(12,2),
+    overseas_tax DECIMAL(12,2),
+    business_tax DECIMAL(12,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

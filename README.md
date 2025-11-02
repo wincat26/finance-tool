@@ -22,8 +22,11 @@
 ### 1. 安裝依賴
 
 ```bash
-# 安裝所有依賴
-npm run install:all
+# 安裝後端依賴
+npm install --workspace backend
+
+# 安裝前端依賴
+npm install --workspace frontend
 ```
 
 ### 2. 設定資料庫
@@ -49,17 +52,17 @@ cp backend/.env.example backend/.env
 ### 4. 初始化資料庫
 
 ```bash
-# 執行資料庫 migration
-npm run db:migrate
+# 匯入 schema（第一次安裝）
+psql -U postgres -d finance_tool -f backend/src/database/schema.sql
+
+# 執行所有 migrations
+npm run backend:migrate
 ```
 
 ### 5. 啟動開發伺服器
 
 ```bash
-# 同時啟動前後端
-npm run dev
-
-# 或分別啟動
+# 分別啟動
 npm run backend:dev  # 後端: http://localhost:3001
 npm run frontend:dev # 前端: http://localhost:3000
 ```
@@ -68,23 +71,24 @@ npm run frontend:dev # 前端: http://localhost:3000
 
 ```
 finance-tool/
-├── frontend/              # React 前端應用
-│   ├── src/
-│   │   ├── components/    # React 元件
-│   │   ├── pages/         # 頁面元件
-│   │   ├── hooks/         # 自訂 Hooks
-│   │   ├── utils/         # 工具函數
-│   │   └── types/         # TypeScript 型別
-│   └── package.json
+├── package.json           # npm workspace 管理
 ├── backend/               # Node.js 後端 API
-│   ├── src/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── src/
 │   │   ├── routes/        # API 路由
 │   │   ├── models/        # 資料模型
 │   │   ├── database/      # 資料庫相關
 │   │   ├── utils/         # 工具函數
 │   │   └── types/         # TypeScript 型別
-│   └── package.json
-├── database/              # 資料庫 schema 和 migrations
+├── frontend/              # React 前端應用
+│   ├── package.json
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       ├── utils/
+│       └── types/
 └── docs/                  # 專案文件
 ```
 

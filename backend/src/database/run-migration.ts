@@ -6,31 +6,64 @@ async function runMigration() {
   try {
     console.log('🔄 執行資料庫遷移...');
     
-    const migrationPath = path.join(__dirname, 'migrations', 'add_missing_columns.sql');
-    const sql = fs.readFileSync(migrationPath, 'utf8');
-    
-    console.log('📋 Migration SQL:');
-    console.log(sql);
-    console.log('---\n');
-    
-    await pool.query(sql);
-    
-    console.log('✅ 遷移成功完成！\n');
-    
-    // 驗證新欄位
-    const result = await pool.query(`
-      SELECT column_name, data_type 
-      FROM information_schema.columns 
-      WHERE table_name = 'projects' 
-      AND column_name IN ('company_alias', 'finance_contact_name', 'finance_contact_phone', 'finance_contact_email', 'finance_notes')
-      ORDER BY column_name
-    `);
-    
-    console.log('📊 新增的欄位:');
-    result.rows.forEach(row => {
-      console.log(`  - ${row.column_name}: ${row.data_type}`);
-    });
-    
+    const migrationsDir = path.join(__dirname, 'migrations');
+    const migrationFiles = fs
+      .readdirSync(migrationsDir)
+      .filter(file => file.endsWith('.sql'))
+      .sort();
+
+    if (migrationFiles.length === 0) {
+      console.log('⚠️  未找到可執行的 migration。');
+      process.exit(0);
+    }
+
+    for (const file of migrationFiles) {
+      const migrationPath = path.join(migrationsDir, file);
+      const sql = fs.readFileSync(migrationPath, 'utf8');
+
+      console.log(`📋 執行 ${file}`);
+      await pool.query(sql);
+    }
+
+    console.log('✅ 所有遷移執行完成！\n');
+
+    // 驗證必備欄位
+    const requiredColumns = [
+      { table: 'projects', column: 'company_alias' },
+      { table: 'projects', column: 'finance_contact_name' },
+      { table: 'projects', column: 'finance_contact_phone' },
+      { table: 'projects', column: 'finance_contact_email' },
+      { table: 'projects', column: 'finance_notes' },
+      { table: 'project_files', column: 'created_by' }
+    ];
+
+    const missing: string[] = [];
+
+    for (const { table, column } of requiredColumns) {
+      const result = await pool.query(
+        `
+          SELECT EXISTS (
+            SELECT 1
+            FROM information_schema.columns
+            WHERE table_name = $1
+              AND column_name = $2
+          ) AS has_column
+        `,
+        [table, column]
+      );
+
+      if (!result.rows[0]?.has_column) {
+        missing.push(`${table}.${column}`);
+      }
+    }
+
+    if (missing.length > 0) {
+      console.warn('⚠️  以下欄位仍缺失：');
+      missing.forEach(name => console.warn(`  - ${name}`));
+      process.exit(1);
+    }
+
+    console.log('📊 必要欄位檢查通過。');
     process.exit(0);
   } catch (error) {
     console.error('❌ 遷移失敗:', error);

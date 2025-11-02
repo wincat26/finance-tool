@@ -7,6 +7,7 @@ import projectRoutes from './routes/projects';
 import dashboardRoutes from './routes/dashboard';
 import customerRoutes from './routes/customers';
 import financeRoutes from './routes/finance';
+import pool from './database/connection';
 
 dotenv.config();
 
@@ -30,8 +31,23 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/finance', financeRoutes);
 
 // 健康檢查
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get('/health', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT 1');
+    const dbOk = result.rowCount === 1;
+    res.json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      database: dbOk ? 'connected' : 'unknown'
+    });
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).json({
+      status: 'ERROR',
+      timestamp: new Date().toISOString(),
+      database: 'disconnected'
+    });
+  }
 });
 
 // 錯誤處理

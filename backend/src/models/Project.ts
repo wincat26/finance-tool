@@ -90,7 +90,8 @@ export class ProjectModel {
       RETURNING *
     `;
     
-    const values = [file.project_id, file.file_type, file.file_name, file.google_drive_url, (file as any).created_by];
+    const createdBy = (file as any).created_by ?? '系統管理員';
+    const values = [file.project_id, file.file_type, file.file_name, file.google_drive_url, createdBy];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
