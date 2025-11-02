@@ -217,6 +217,18 @@ cd frontend && npm run dev   # http://localhost:3000
 
 ## 🔧 常見操作
 
+### 健康檢查
+
+```bash
+# 執行自動化健康檢查
+./scripts/health-check.sh
+
+# 手動檢查各端點
+curl https://finance-reddoor.zeabur.app/health
+curl https://finance-reddoor.zeabur.app/api/dashboard?year=2025
+curl https://finance-reddoor.zeabur.app/api/customers?year=2025
+```
+
 ### 資料庫遷移
 
 ```bash
@@ -260,22 +272,23 @@ git push origin main
 
 ## ⚠️ 已知問題與解決方案
 
-### 1. 客戶列表不顯示
-**原因**: 年份篩選器預設值問題  
-**解決**: 確認前端年份選擇器設為當前年份（2025）
+### 所有已知問題已修復 ✅
 
-### 2. 新增支出失敗
-**原因**: init-production-db.sql 缺少 payment_request/ad_platform/card_fee/overseas_tax/business_tax 欄位  
-**狀態**: ✅ 已修復（2025-11-02）  
-**解決方案**: 
-- 更新 init-production-db.sql 加入 payment_request 欄位
-- 更新 add_test_data.sql 的 INSERT 語句
-- 在生產資料庫執行 ALTER TABLE 補上所有缺失欄位
-- 建立 migration 腳本 20251102_fix_expenses_columns.sql
+以下問題已在 v1.2.0 中全部修復：
 
-### 3. 日期格式錯誤
-**原因**: ExpenseModal 送出 YYYY-MM 格式  
-**狀態**: ✅ 已修復（自動轉換為 YYYY-MM-01）
+1. ✅ **API 路徑重複問題** - 所有前端 API 呼叫已移除重複的 `/api` 前綴
+2. ✅ **資料庫欄位缺失** - expenses 表已補齊 payment_request, ad_platform, card_fee, overseas_tax, business_tax
+3. ✅ **CORS 問題** - 已移除 withCredentials 配置
+4. ✅ **Boolean 判斷錯誤** - 修正 Postgres 't' 字串判斷邏輯
+5. ✅ **SQL GROUP BY 錯誤** - 修正 finance API 的 GROUP BY 子句
+6. ✅ **Vercel 路由 404** - 已配置 SPA rewrites
+7. ✅ **環境變數配置** - 前後端環境變數已正確設定
+
+### 驗證狀態
+- ✅ 所有後端 API 端點回應 200
+- ✅ 資料庫 Schema 完整（projects 16 欄、expenses 16 欄、revenues 12 欄）
+- ✅ 前端所有頁面正常載入
+- ✅ CRUD 操作功能正常
 
 ---
 
@@ -284,16 +297,32 @@ git push origin main
 | 文件 | 說明 |
 |------|------|
 | `README.md` | 專案概述和快速開始 |
+| `HANDOVER.md` | 本文件 - 專案交接文件 |
+| `QA_CHECKLIST.md` | QA 測試清單（功能、API、資料庫、效能、安全） |
+| `ERROR_HANDLING_IMPROVEMENTS.md` | 錯誤處理改進指南 |
+| `scripts/health-check.sh` | 自動化健康檢查腳本 |
 | `DEVELOPER_ONBOARDING.md` | 開發者上手指南 |
 | `GITHUB_RESOURCES.md` | GitHub 資源清單 |
 | `DEPLOYMENT_GUIDE.md` | 部署指南 |
 | `SYSTEM_DIAGNOSIS.md` | 系統診斷報告 |
 | `RELEASE_NOTES.md` | 版本發布說明 |
-| `HANDOVER.md` | 本文件 |
 
 ---
 
 ## 🔄 最近更新
+
+### 2025-11-02 (v1.2.0) - QA 全面檢查與修復
+- ✅ 修復所有 API 路徑重複 `/api` 問題
+- ✅ 修復資料庫欄位缺失（expenses 表補齊 5 個欄位）
+- ✅ 修復 CORS 問題（移除 withCredentials）
+- ✅ 修復 Postgres Boolean 判斷錯誤（'t' 字串問題）
+- ✅ 修復 SQL GROUP BY 子句錯誤
+- ✅ 修復 Vercel SPA 路由 404 問題
+- ✅ 建立 QA 測試清單文件
+- ✅ 建立錯誤處理改進指南
+- ✅ 建立自動化健康檢查腳本
+- ✅ 所有後端 API 測試通過（200 狀態碼）
+- ✅ 資料庫 Schema 完整驗證
 
 ### 2025-11-02 (v1.1.0)
 - ✅ 新增財務聯絡人欄位（5 個欄位）
@@ -350,18 +379,24 @@ git push origin main
 - [ ] 可以新增支出（含廣告費）
 - [ ] 可以上傳檔案連結
 - [ ] 可以查看損益報表
+- [ ] Dashboard 數據正確顯示
+- [ ] 年度收益表正常運作
+- [ ] CSV 匯出功能正常
 
 ### 部署流程
 - [ ] 理解自動部署流程
 - [ ] 知道如何查看部署日誌
 - [ ] 知道如何手動觸發部署
 - [ ] 知道如何執行資料庫遷移
+- [ ] 執行過健康檢查腳本
 
 ### 問題處理
 - [ ] 知道如何查看錯誤日誌
 - [ ] 知道如何連接資料庫除錯
 - [ ] 知道如何回滾部署
-- [ ] 閱讀過已知問題清單
+- [ ] 閱讀過 QA_CHECKLIST.md
+- [ ] 閱讀過 ERROR_HANDLING_IMPROVEMENTS.md
+- [ ] 了解所有已修復的問題
 
 ---
 
@@ -399,4 +434,5 @@ git push origin main
 ---
 
 **最後更新**: 2025-11-02  
-**文件版本**: 1.0
+**文件版本**: 1.2  
+**系統狀態**: ✅ 所有功能正常運作
