@@ -6,7 +6,6 @@ const resolveUrl = (path: string) =>
 
 export const apiClient = axios.create({
   baseURL: `${API_BASE}/api`,
-  withCredentials: true,
 });
 
 export const apiFetch = (path: string, init?: RequestInit) =>
