@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     invoice_number VARCHAR(100),
     file_url TEXT,
     notes TEXT,
+    payment_request BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

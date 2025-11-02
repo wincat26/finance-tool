@@ -265,8 +265,13 @@ git push origin main
 **解決**: 確認前端年份選擇器設為當前年份（2025）
 
 ### 2. 新增支出失敗
-**原因**: 缺少 payment_request 等欄位  
-**狀態**: ✅ 已修復（2025-11-02）
+**原因**: init-production-db.sql 缺少 payment_request/ad_platform/card_fee/overseas_tax/business_tax 欄位  
+**狀態**: ✅ 已修復（2025-11-02）  
+**解決方案**: 
+- 更新 init-production-db.sql 加入 payment_request 欄位
+- 更新 add_test_data.sql 的 INSERT 語句
+- 在生產資料庫執行 ALTER TABLE 補上所有缺失欄位
+- 建立 migration 腳本 20251102_fix_expenses_columns.sql
 
 ### 3. 日期格式錯誤
 **原因**: ExpenseModal 送出 YYYY-MM 格式  

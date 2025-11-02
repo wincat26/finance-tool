@@ -11,7 +11,7 @@ INSERT INTO revenues (project_id, service_type, amount, income_date, status, not
 (3, '系統開發', 150000, '2024-03-15', 'pending', '開發費用');
 
 -- 添加測試支出數據
-INSERT INTO expenses (project_id, supplier_name, expense_type, amount, expense_date, notes) VALUES 
-(1, '設計外包商', '設計費', 20000, '2024-01-22', '外包設計費'),
-(2, 'Google Ads', '廣告費', 15000, '2024-02-28', 'Google廣告投放'),
-(3, '開發團隊', '開發費', 50000, '2024-03-20', '外包開發費用');
+INSERT INTO expenses (project_id, supplier_name, expense_type, amount, expense_date, notes, payment_request) VALUES 
+(1, '設計外包商', '設計費', 20000, '2024-01-22', '外包設計費', false),
+(2, 'Google Ads', '廣告費', 15000, '2024-02-28', 'Google廣告投放', false),
+(3, '開發團隊', '開發費', 50000, '2024-03-20', '外包開發費用', false);
