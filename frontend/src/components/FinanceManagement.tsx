@@ -15,7 +15,7 @@ export default function FinanceManagement() {
   const fetchReportData = async () => {
     try {
       setLoading(true);
-      const response = await apiFetch(`/api/finance/annual-report?year=${yearFilter}`);
+      const response = await apiFetch(`/finance/annual-report?year=${yearFilter}`);
       const data = await response.json();
       setReportData(data);
     } catch (error) {
@@ -45,7 +45,7 @@ export default function FinanceManagement() {
     csvData.push(['類別', '公司', '細項', ...months, '合計']);
     
     // 收入數據
-    Object.entries(reportData.revenues).forEach(([company, companyData]: [string, any]) => {
+    Object.entries(reportData.revenues || {}).forEach(([company, companyData]: [string, any]) => {
       Object.entries(companyData).forEach(([category, monthlyData]: [string, any]) => {
         const row = ['收入', company, category];
         months.forEach((_, index) => {
@@ -57,7 +57,7 @@ export default function FinanceManagement() {
     });
     
     // 支出數據
-    Object.entries(reportData.expenses).forEach(([company, companyData]: [string, any]) => {
+    Object.entries(reportData.expenses || {}).forEach(([company, companyData]: [string, any]) => {
       Object.entries(companyData).forEach(([category, monthlyData]: [string, any]) => {
         const row = ['支出', company, category];
         months.forEach((_, index) => {
@@ -132,7 +132,7 @@ export default function FinanceManagement() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {/* 收入部分 */}
-              {Object.entries(reportData.revenues).map(([company, companyData]: [string, any]) => {
+              {Object.entries(reportData.revenues || {}).map(([company, companyData]: [string, any]) => {
                 const isExpanded = expandedCompanies.has(`revenue-${company}`);
                 const companyTotal = Object.values(companyData).reduce((sum: number, monthlyData: any) => {
                   return sum + Object.values(monthlyData).reduce((monthSum: number, val: any) => monthSum + (val || 0), 0);
@@ -185,7 +185,7 @@ export default function FinanceManagement() {
               })}
               
               {/* 支出部分 */}
-              {Object.entries(reportData.expenses).map(([company, companyData]: [string, any]) => {
+              {Object.entries(reportData.expenses || {}).map(([company, companyData]: [string, any]) => {
                 const isExpanded = expandedCompanies.has(`expense-${company}`);
                 const companyTotal = Object.values(companyData).reduce((sum: number, monthlyData: any) => {
                   return sum + Object.values(monthlyData).reduce((monthSum: number, val: any) => monthSum + (val || 0), 0);
@@ -241,12 +241,12 @@ export default function FinanceManagement() {
               <tr className="bg-blue-50 font-semibold">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-800" colSpan={2}>淨收益</td>
                 {months.map((_, index) => {
-                  const monthRevenue = Object.values(reportData.revenues).reduce((sum: number, companyData: any) => {
+                  const monthRevenue = Object.values(reportData.revenues || {}).reduce((sum: number, companyData: any) => {
                     return sum + Object.values(companyData).reduce((companySum: number, monthlyData: any) => {
                       return companySum + (monthlyData[index + 1] || 0);
                     }, 0);
                   }, 0);
-                  const monthExpense = Object.values(reportData.expenses).reduce((sum: number, companyData: any) => {
+                  const monthExpense = Object.values(reportData.expenses || {}).reduce((sum: number, companyData: any) => {
                     return sum + Object.values(companyData).reduce((companySum: number, monthlyData: any) => {
                       return companySum + (monthlyData[index + 1] || 0);
                     }, 0);
