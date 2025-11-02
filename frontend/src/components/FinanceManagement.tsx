@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Calendar, ChevronDown, ChevronRight } from 'lucide-react';
-import { apiFetch } from '../utils/api';
+import { apiClient } from '../utils/api';
 
 export default function FinanceManagement() {
   const [yearFilter, setYearFilter] = useState<number>(new Date().getFullYear());
@@ -15,8 +15,8 @@ export default function FinanceManagement() {
   const fetchReportData = async () => {
     try {
       setLoading(true);
-      const response = await apiFetch(`/finance/annual-report?year=${yearFilter}`);
-      const data = await response.json();
+      const response = await apiClient.get(`/finance/annual-report?year=${yearFilter}`);
+      const data = response.data;
       setReportData(data);
     } catch (error) {
       console.error('Failed to fetch report data:', error);
