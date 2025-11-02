@@ -36,7 +36,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/customers?year=${yearFilter}`);
+      const response = await apiClient.get(`/customers?year=${yearFilter}`);
       setProjects(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
@@ -211,7 +211,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             customer={editingCustomer}
             onSave={async (customer) => {
               try {
-                await apiClient.put(`/api/customers/${editingCustomer!.id}`, customer);
+                await apiClient.put(`/customers/${editingCustomer!.id}`, customer);
                 fetchProjects();
                 setShowEditModal(false);
                 setEditingCustomer(null);
@@ -231,7 +231,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
           onClose={() => setIsModalOpen(false)}
           onSave={async (customer) => {
             try {
-              await apiClient.post(`/api/customers`, customer);
+              await apiClient.post(`/customers`, customer);
               fetchProjects();
             } catch (error) {
               console.error('儲存客戶失敗:', error);
