@@ -21,7 +21,8 @@ async function ensureCompanyAliasColumn(): Promise<boolean> {
         ) AS has_column
       `
     );
-    hasCompanyAliasColumn = Boolean(result.rows[0]?.has_column);
+    const hasColumn = result.rows[0]?.has_column;
+    hasCompanyAliasColumn = hasColumn === true || hasColumn === 't';
   } catch (error) {
     console.error('Failed to inspect projects table metadata:', error);
     hasCompanyAliasColumn = false;
