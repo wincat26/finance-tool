@@ -51,8 +51,8 @@ router.get('/annual-report', async (req, res) => {
       FROM revenues r
       JOIN projects p ON r.project_id = p.id
       WHERE EXTRACT(YEAR FROM r.income_date) = $1
-      GROUP BY p.company_name, r.service_type, EXTRACT(MONTH FROM r.income_date)
-      ORDER BY p.company_name, r.service_type, month
+      GROUP BY ${companySelect}, r.service_type, EXTRACT(MONTH FROM r.income_date)
+      ORDER BY company_name, r.service_type, month
     `;
     
     // 取得支出資料，包含公司名稱和支出類型
@@ -65,8 +65,8 @@ router.get('/annual-report', async (req, res) => {
       FROM expenses e
       JOIN projects p ON e.project_id = p.id
       WHERE EXTRACT(YEAR FROM e.expense_date) = $1
-      GROUP BY p.company_name, e.expense_type, EXTRACT(MONTH FROM e.expense_date)
-      ORDER BY p.company_name, e.expense_type, month
+      GROUP BY ${companySelect}, e.expense_type, EXTRACT(MONTH FROM e.expense_date)
+      ORDER BY company_name, e.expense_type, month
     `;
     
     const [revenueResult, expenseResult] = await Promise.all([
