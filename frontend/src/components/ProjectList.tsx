@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, ExternalLink } from 'lucide-react';
 import { Project } from '../types';
-import { apiClient } from '../utils/api';
+import { api } from '../utils/api';
 import { format } from 'date-fns';
 import CustomerModal from './CustomerModal';
 import CustomerDetail from './CustomerDetail';
@@ -36,7 +36,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/customers?year=${yearFilter}`);
+      const response = await api.get(`/customers?year=${yearFilter}`);
       setProjects(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
@@ -47,7 +47,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
 
   const filteredProjects = (projects || []).filter(project => {
     const matchesSearch = project.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.contact_name.toLowerCase().includes(searchTerm.toLowerCase());
+      project.contact_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -105,7 +105,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
               className="pl-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
-          
+
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -184,7 +184,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             </li>
           ))}
         </ul>
-        
+
         {filteredProjects.length === 0 && (
           <div className="text-center py-12">
             <p className="text-sm text-gray-500">沒有找到符合條件的客戶</p>
@@ -211,7 +211,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
             customer={editingCustomer}
             onSave={async (customer) => {
               try {
-                await apiClient.put(`/customers/${editingCustomer!.id}`, customer);
+                await api.put(`/customers/${editingCustomer!.id}`, customer);
                 fetchProjects();
                 setShowEditModal(false);
                 setEditingCustomer(null);
@@ -231,7 +231,7 @@ export default function ProjectList({ onProjectSelect, onNewProject }: ProjectLi
           onClose={() => setIsModalOpen(false)}
           onSave={async (customer) => {
             try {
-              await apiClient.post(`/customers`, customer);
+              await api.post(`/customers`, customer);
               fetchProjects();
             } catch (error) {
               console.error('儲存客戶失敗:', error);

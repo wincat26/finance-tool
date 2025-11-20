@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Calendar, ChevronDown, ChevronRight } from 'lucide-react';
-import { apiClient } from '../utils/api';
+import { api } from '../utils/api';
 
 export default function FinanceManagement() {
   const [yearFilter, setYearFilter] = useState<number>(new Date().getFullYear());
@@ -15,7 +15,7 @@ export default function FinanceManagement() {
   const fetchReportData = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/finance/annual-report?year=${yearFilter}`);
+      const response = await api.get(`/finance/annual-report?year=${yearFilter}`);
       const data = response.data;
       setReportData(data);
     } catch (error) {
@@ -37,13 +37,13 @@ export default function FinanceManagement() {
 
   const exportToCSV = () => {
     if (!reportData) return;
-    
+
     const csvData = [];
     const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-    
+
     // 標題行
     csvData.push(['類別', '公司', '細項', ...months, '合計']);
-    
+
     // 收入數據
     Object.entries(reportData.revenues || {}).forEach(([company, companyData]: [string, any]) => {
       Object.entries(companyData).forEach(([category, monthlyData]: [string, any]) => {
@@ -55,7 +55,7 @@ export default function FinanceManagement() {
         csvData.push(row);
       });
     });
-    
+
     // 支出數據
     Object.entries(reportData.expenses || {}).forEach(([company, companyData]: [string, any]) => {
       Object.entries(companyData).forEach(([category, monthlyData]: [string, any]) => {
@@ -67,7 +67,7 @@ export default function FinanceManagement() {
         csvData.push(row);
       });
     });
-    
+
     const csvContent = csvData.map(row => row.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -137,7 +137,7 @@ export default function FinanceManagement() {
                 const companyTotal = Object.values(companyData).reduce((sum: number, monthlyData: any) => {
                   return sum + Object.values(monthlyData).reduce((monthSum: number, val: any) => monthSum + (val || 0), 0);
                 }, 0);
-                
+
                 return (
                   <React.Fragment key={`revenue-${company}`}>
                     {/* 公司總計行 */}
@@ -161,7 +161,7 @@ export default function FinanceManagement() {
                         ${Number(companyTotal).toLocaleString()}
                       </td>
                     </tr>
-                    
+
                     {/* 展開的細項 */}
                     {isExpanded && Object.entries(companyData).map(([category, monthlyData]: [string, any]) => {
                       const total = Object.values(monthlyData).reduce((sum: number, val: any) => sum + (val || 0), 0);
@@ -183,14 +183,14 @@ export default function FinanceManagement() {
                   </React.Fragment>
                 );
               })}
-              
+
               {/* 支出部分 */}
               {Object.entries(reportData.expenses || {}).map(([company, companyData]: [string, any]) => {
                 const isExpanded = expandedCompanies.has(`expense-${company}`);
                 const companyTotal = Object.values(companyData).reduce((sum: number, monthlyData: any) => {
                   return sum + Object.values(monthlyData).reduce((monthSum: number, val: any) => monthSum + (val || 0), 0);
                 }, 0);
-                
+
                 return (
                   <React.Fragment key={`expense-${company}`}>
                     {/* 公司總計行 */}
@@ -214,7 +214,7 @@ export default function FinanceManagement() {
                         -${Number(companyTotal).toLocaleString()}
                       </td>
                     </tr>
-                    
+
                     {/* 展開的細項 */}
                     {isExpanded && Object.entries(companyData).map(([category, monthlyData]: [string, any]) => {
                       const total = Object.values(monthlyData).reduce((sum: number, val: any) => sum + (val || 0), 0);
@@ -236,7 +236,7 @@ export default function FinanceManagement() {
                   </React.Fragment>
                 );
               })}
-              
+
               {/* 總計行 */}
               <tr className="bg-blue-50 font-semibold">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-800" colSpan={2}>淨收益</td>
@@ -253,16 +253,14 @@ export default function FinanceManagement() {
                   }, 0);
                   const monthProfit = monthRevenue - monthExpense;
                   return (
-                    <td key={index} className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${
-                      monthProfit >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <td key={index} className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${monthProfit >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
                       {monthProfit !== 0 ? `${monthProfit >= 0 ? '' : '-'}$${Math.abs(monthProfit).toLocaleString()}` : '-'}
                     </td>
                   );
                 })}
-                <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${
-                  reportData.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold text-right ${reportData.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}>
                   {reportData.totalProfit >= 0 ? '' : '-'}${Math.abs(reportData.totalProfit).toLocaleString()}
                 </td>
               </tr>

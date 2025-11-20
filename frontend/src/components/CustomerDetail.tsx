@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import FileModal from './FileModal';
 import RevenueModal from './RevenueModal';
 import ExpenseModal from './ExpenseModal';
-import { apiClient } from '../utils/api';
+import { api } from '../utils/api';
 
 interface CustomerDetailProps {
   customer: Project;
@@ -23,7 +23,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchRevenues = async () => {
     try {
-      const response = await apiClient.get(`/customers/${customer.id}/revenues`);
+      const response = await api.get(`/customers/${customer.id}/revenues`);
       setRevenues(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch revenues:', error);
@@ -43,7 +43,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchExpenses = async () => {
     try {
-      const response = await apiClient.get(`/customers/${customer.id}/expenses`);
+      const response = await api.get(`/customers/${customer.id}/expenses`);
       setExpenses(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch expenses:', error);
@@ -66,7 +66,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
 
   const fetchFiles = async () => {
     try {
-      const response = await apiClient.get(`/customers/${customer.id}/files`);
+      const response = await api.get(`/customers/${customer.id}/files`);
       setFiles(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch files:', error);
@@ -116,11 +116,10 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                  }`}
               >
                 <Icon className="h-4 w-4 inline mr-2" />
                 {tab.name}
@@ -136,7 +135,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
           <div>
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-medium">基本資料</h3>
-              <button 
+              <button
                 onClick={() => onEdit(customer)}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
               >
@@ -147,57 +146,56 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <h4 className="text-md font-medium mb-4">公司資訊</h4>
-              <dl className="space-y-3">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">公司名稱</dt>
-                  <dd className="text-sm text-gray-900">{customer.company_name}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">統一編號</dt>
-                  <dd className="text-sm text-gray-900">{customer.vat_number || '-'}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">狀態</dt>
-                  <dd>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      customer.status === 'active' ? 'bg-green-100 text-green-800' :
-                      customer.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {customer.status === 'active' ? '進行中' : 
-                       customer.status === 'completed' ? '已完成' : '已取消'}
-                    </span>
-                  </dd>
-                </div>
-              </dl>
-            </div>
+                <dl className="space-y-3">
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">公司名稱</dt>
+                    <dd className="text-sm text-gray-900">{customer.company_name}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">統一編號</dt>
+                    <dd className="text-sm text-gray-900">{customer.vat_number || '-'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">狀態</dt>
+                    <dd>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${customer.status === 'active' ? 'bg-green-100 text-green-800' :
+                          customer.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                            'bg-red-100 text-red-800'
+                        }`}>
+                        {customer.status === 'active' ? '進行中' :
+                          customer.status === 'completed' ? '已完成' : '已取消'}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
               <div>
                 <h4 className="text-md font-medium mb-4">聯絡資訊</h4>
-              <dl className="space-y-3">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">聯絡人</dt>
-                  <dd className="text-sm text-gray-900">{customer.contact_name}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">電話</dt>
-                  <dd className="text-sm text-gray-900">{customer.contact_phone || '-'}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Email</dt>
-                  <dd className="text-sm text-gray-900">{customer.contact_email || '-'}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">負責業務</dt>
-                  <dd className="text-sm text-gray-900">{customer.responsible_person}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">進案日期</dt>
-                  <dd className="text-sm text-gray-900">{format(new Date(customer.project_date), 'yyyy/MM/dd')}</dd>
-                </div>
-              </dl>
+                <dl className="space-y-3">
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">聯絡人</dt>
+                    <dd className="text-sm text-gray-900">{customer.contact_name}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">電話</dt>
+                    <dd className="text-sm text-gray-900">{customer.contact_phone || '-'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">Email</dt>
+                    <dd className="text-sm text-gray-900">{customer.contact_email || '-'}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">負責業務</dt>
+                    <dd className="text-sm text-gray-900">{customer.responsible_person}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">進案日期</dt>
+                    <dd className="text-sm text-gray-900">{format(new Date(customer.project_date), 'yyyy/MM/dd')}</dd>
+                  </div>
+                </dl>
               </div>
             </div>
-            
+
             {/* 財務資訊 */}
             <div className="border-t pt-6 mt-6">
               <h4 className="text-md font-medium mb-4">財務資訊</h4>
@@ -249,7 +247,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
                   <option value="其他">其他</option>
                 </select>
               </div>
-              <button 
+              <button
                 onClick={() => setShowFileModal(true)}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
               >
@@ -261,7 +259,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               const filteredFiles = files
                 .filter(file => fileFilter === 'all' || file.file_type === fileFilter)
                 .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-              
+
               const groupedFiles = filteredFiles.reduce((groups, file) => {
                 const type = file.file_type;
                 if (!groups[type]) groups[type] = [];
@@ -353,7 +351,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
           <div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">收入記錄</h3>
-              <button 
+              <button
                 onClick={() => setShowRevenueModal(true)}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
               >
@@ -414,7 +412,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
                   <option value="其他">其他</option>
                 </select>
               </div>
-              <button 
+              <button
                 onClick={() => setShowExpenseModal(true)}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
               >
@@ -426,7 +424,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
               const filteredExpenses = expenses
                 .filter(expense => expenseFilter === 'all' || expense.expense_type === expenseFilter)
                 .sort((a, b) => new Date(b.expense_date).getTime() - new Date(a.expense_date).getTime());
-              
+
               const groupedExpenses = filteredExpenses.reduce((groups, expense) => {
                 const type = expense.expense_type;
                 if (!groups[type]) groups[type] = [];
@@ -523,7 +521,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
                 ))}
               </select>
             </div>
-            
+
             <div className="space-y-6">
               {/* 收入總計 */}
               <div className="bg-green-50 p-4 rounded-lg">
@@ -613,15 +611,15 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         file={editingFile}
         onSave={async (file) => {
           try {
-            const url = editingFile 
+            const url = editingFile
               ? `/customers/${customer.id}/files/${editingFile.id}`
               : `/customers/${customer.id}/files`;
             const method = editingFile ? 'PUT' : 'POST';
-            
+
             if (editingFile) {
-              await apiClient.put(`/customers/${customer.id}/files/${editingFile.id}`, file);
+              await api.put(`/customers/${customer.id}/files/${editingFile.id}`, file);
             } else {
-              await apiClient.post(`/customers/${customer.id}/files`, file);
+              await api.post(`/customers/${customer.id}/files`, file);
             }
             await fetchFiles();
             setEditingFile(null);
@@ -631,7 +629,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/customers/${customer.id}/files/${id}`);
+            await api.delete(`/customers/${customer.id}/files/${id}`);
             await fetchFiles();
             setEditingFile(null);
           } catch (error) {
@@ -649,15 +647,15 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         revenue={editingRevenue}
         onSave={async (revenue) => {
           try {
-            const url = editingRevenue 
+            const url = editingRevenue
               ? `/customers/${customer.id}/revenues/${editingRevenue.id}`
               : `/customers/${customer.id}/revenues`;
             const method = editingRevenue ? 'PUT' : 'POST';
-            
+
             if (editingRevenue) {
-              await apiClient.put(`/customers/${customer.id}/revenues/${editingRevenue.id}`, revenue);
+              await api.put(`/customers/${customer.id}/revenues/${editingRevenue.id}`, revenue);
             } else {
-              await apiClient.post(`/customers/${customer.id}/revenues`, revenue);
+              await api.post(`/customers/${customer.id}/revenues`, revenue);
             }
             await fetchRevenues();
             setEditingRevenue(null);
@@ -667,7 +665,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/customers/${customer.id}/revenues/${id}`);
+            await api.delete(`/customers/${customer.id}/revenues/${id}`);
             await fetchRevenues();
             setEditingRevenue(null);
           } catch (error) {
@@ -685,15 +683,15 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         expense={editingExpense}
         onSave={async (expense) => {
           try {
-            const url = editingExpense 
+            const url = editingExpense
               ? `/customers/${customer.id}/expenses/${editingExpense.id}`
               : `/customers/${customer.id}/expenses`;
             const method = editingExpense ? 'PUT' : 'POST';
-            
+
             if (editingExpense) {
-              await apiClient.put(`/customers/${customer.id}/expenses/${editingExpense.id}`, expense);
+              await api.put(`/customers/${customer.id}/expenses/${editingExpense.id}`, expense);
             } else {
-              await apiClient.post(`/customers/${customer.id}/expenses`, expense);
+              await api.post(`/customers/${customer.id}/expenses`, expense);
             }
             await fetchExpenses();
             setEditingExpense(null);
@@ -703,7 +701,7 @@ export default function CustomerDetail({ customer, onBack, onEdit }: CustomerDet
         }}
         onDelete={async (id) => {
           try {
-            await apiClient.delete(`/customers/${customer.id}/expenses/${id}`);
+            await api.delete(`/customers/${customer.id}/expenses/${id}`);
             await fetchExpenses();
             setEditingExpense(null);
           } catch (error) {
