@@ -26,20 +26,20 @@ export class ProjectModule implements IModule {
         contact_email: { type: 'string' },
         project_date: { type: 'date', required: true },
         responsible_person: { type: 'string', required: true },
-        status: { 
-          type: 'string', 
+        status: {
+          type: 'string',
           default: 'active',
-          validation: (value) => ['active', 'completed', 'cancelled'].includes(value)
+          validation: (value: string) => ['active', 'completed', 'cancelled'].includes(value)
         },
         description: { type: 'string' }
       },
       hooks: {
-        beforeCreate: async (data) => {
+        beforeCreate: async (data: any) => {
           data.created_at = new Date();
           data.updated_at = new Date();
           return data;
         },
-        beforeUpdate: async (data) => {
+        beforeUpdate: async (data: any) => {
           data.updated_at = new Date();
           return data;
         }
@@ -48,7 +48,7 @@ export class ProjectModule implements IModule {
 
     // 註冊路由
     this.app.getApp().use('/api/projects', projectRoutes);
-    
+
     console.log('📁 專案模組已載入');
   }
 

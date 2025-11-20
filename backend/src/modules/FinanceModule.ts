@@ -16,12 +16,12 @@ export class FinanceModule implements IModule {
       name: 'revenues',
       tableName: 'revenues',
       fields: {
-        project_id: { 
+        project_id: {
           type: 'relation',
           relation: { target: 'projects', type: 'belongsTo' },
           required: true
         },
-        customer_id: { 
+        customer_id: {
           type: 'relation',
           relation: { target: 'customers', type: 'belongsTo' }
         },
@@ -30,15 +30,15 @@ export class FinanceModule implements IModule {
         amount: { type: 'number', required: true },
         income_date: { type: 'date', required: true },
         invoice_number: { type: 'string' },
-        status: { 
-          type: 'string', 
+        status: {
+          type: 'string',
           default: 'pending',
-          validation: (value) => ['pending', 'partial', 'completed'].includes(value)
+          validation: (value: string) => ['pending', 'partial', 'completed'].includes(value)
         },
         notes: { type: 'string' }
       },
       hooks: {
-        afterCreate: async (data) => {
+        afterCreate: async (data: any) => {
           // 自動建立分期收款記錄
           await this.createInstallments(data);
         }
@@ -50,7 +50,7 @@ export class FinanceModule implements IModule {
       name: 'expenses',
       tableName: 'expenses',
       fields: {
-        project_id: { 
+        project_id: {
           type: 'relation',
           relation: { target: 'projects', type: 'belongsTo' },
           required: true
@@ -69,7 +69,7 @@ export class FinanceModule implements IModule {
         business_tax: { type: 'number' }
       },
       hooks: {
-        beforeCreate: async (data) => {
+        beforeCreate: async (data: any) => {
           // 自動計算稅費
           if (data.ad_platform && data.amount) {
             data.card_fee = data.amount * 0.03; // 3% 刷卡手續費
@@ -82,7 +82,7 @@ export class FinanceModule implements IModule {
 
     // 註冊路由
     this.app.getApp().use('/api/finance', financeRoutes);
-    
+
     console.log('💰 財務模組已載入');
   }
 
