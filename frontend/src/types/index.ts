@@ -54,3 +54,30 @@ export interface Contact {
   created_at: string;
   updated_at: string;
 }
+
+export interface DashboardData {
+  profitLoss: {
+    totalRevenue: number;
+    totalExpense: number;
+    profit: number;
+  };
+  projectStats: {
+    status: string;
+    count: number;
+  }[];
+  cashFlow: {
+    month: string;
+    revenue: number;
+    expense: number;
+  }[];
+  expenseStructure: {
+    category: string;
+    amount: number;
+  }[];
+  installmentProgress: {
+    receivedCount: number;
+    pendingCount: number;
+    receivedAmount: number;
+    pendingAmount: number;
+  };
+}
