@@ -29,7 +29,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:staging": "vite --mode staging --port 3003",
     "build": "vite build",
+    "build:staging": "vite build --mode staging",
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch"

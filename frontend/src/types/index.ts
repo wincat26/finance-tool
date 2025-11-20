@@ -16,48 +16,41 @@ export interface Project {
   finance_notes?: string;
   created_at: string;
   updated_at: string;
-  files?: ProjectFile[];
 }
 
-export interface ProjectFile {
+export interface Lead {
   id: number;
-  project_id: number;
-  file_type: string;
-  file_name: string;
-  google_drive_url: string;
+  name: string;
+  company?: string;
+  phone?: string;
+  email?: string;
+  source?: string;
+  status: 'new' | 'contacted' | 'qualified' | 'lost';
+  tags?: string[];
+  custom_fields?: Record<string, any>;
+  assigned_to?: string;
+  lead_score: number;
+  last_contact_date?: string;
+  notes?: string;
   created_at: string;
+  updated_at: string;
+  converted_at?: string;
+  converted_to_contact_id?: number;
 }
 
-export interface DashboardData {
-  year: number;
-  cashFlow: {
-    month: string;
-    revenue: number;
-    expense: number;
-    profit: number;
-  }[];
-  expenseStructure: {
-    category: string;
-    amount: number;
-  }[];
-  profitLoss: {
-    totalRevenue: number;
-    totalExpense: number;
-    profit: number;
-  };
-  revenueStatus: {
-    status: string;
-    count: number;
-    amount: number;
-  }[];
-  installmentProgress: {
-    pendingCount: number;
-    receivedCount: number;
-    pendingAmount: number;
-    receivedAmount: number;
-  };
-  projectStats: {
-    status: string;
-    count: number;
-  }[];
+export interface Contact {
+  id: number;
+  name: string;
+  company?: string;
+  position?: string;
+  phone?: string;
+  email?: string;
+  tags?: string[];
+  custom_fields?: Record<string, any>;
+  status: 'active' | 'inactive';
+  source?: string;
+  lead_id?: number;
+  customer_id?: number;
+  created_at: string;
+  updated_at: string;
 }

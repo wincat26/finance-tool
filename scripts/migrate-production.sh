@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 生產環境資料庫遷移腳本
-# 使用方式: ./migrate-production.sh
+# 使用方式: ./scripts/migrate-production.sh
 
 echo "🚀 開始執行資料庫遷移..."
 echo ""

@@ -73,6 +73,7 @@ export interface Customer {
   name: string;
   vat_number?: string;
   contact_info?: string;
+  primary_contact_id?: number;
   created_at: Date;
 }
 
@@ -88,4 +89,41 @@ export interface RevenueCategory {
   name: string;
   description?: string;
   created_at: Date;
+}
+
+export interface Lead {
+  id: number;
+  name: string;
+  company?: string;
+  phone?: string;
+  email?: string;
+  source?: string;
+  status: 'new' | 'contacted' | 'qualified' | 'lost';
+  tags?: string[];
+  custom_fields?: Record<string, any>;
+  assigned_to?: string;
+  lead_score: number;
+  last_contact_date?: Date;
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
+  converted_at?: Date;
+  converted_to_contact_id?: number;
+}
+
+export interface Contact {
+  id: number;
+  name: string;
+  company?: string;
+  position?: string;
+  phone?: string;
+  email?: string;
+  tags?: string[];
+  custom_fields?: Record<string, any>;
+  status: 'active' | 'inactive';
+  source?: string;
+  lead_id?: number;
+  customer_id?: number;
+  created_at: Date;
+  updated_at: Date;
 }
