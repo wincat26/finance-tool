@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Calendar, DollarSign, TrendingUp, FileText, AlertCircle } from 'lucide-react';
 import { DashboardData } from '../types';
-import { apiClient } from '../utils/api';
+import { api } from '../utils/api';
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
 
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/dashboard?year=${selectedYear}`);
+      const response = await api.get(`/dashboard?year=${selectedYear}`);
       setData(response.data);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
@@ -169,7 +169,7 @@ export default function Dashboard() {
               <div
                 className="bg-green-500 h-2 rounded-full"
                 style={{
-                  width: `${((data.installmentProgress?.receivedCount || 0) / 
+                  width: `${((data.installmentProgress?.receivedCount || 0) /
                     ((data.installmentProgress?.receivedCount || 0) + (data.installmentProgress?.pendingCount || 0)) || 1) * 100}%`
                 }}
               ></div>
@@ -187,7 +187,7 @@ export default function Dashboard() {
               <div
                 className="bg-yellow-500 h-2 rounded-full"
                 style={{
-                  width: `${((data.installmentProgress?.pendingCount || 0) / 
+                  width: `${((data.installmentProgress?.pendingCount || 0) /
                     ((data.installmentProgress?.receivedCount || 0) + (data.installmentProgress?.pendingCount || 0)) || 1) * 100}%`
                 }}
               ></div>
